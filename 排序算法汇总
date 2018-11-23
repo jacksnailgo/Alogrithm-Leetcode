@@ -122,6 +122,18 @@ void Merge_sort(int a[],int n){
 
 
 归并排序非递归版本：
+void merge(int a[],int tempA[],int l1,int l2,int r2){
+    int r1=l2-1;
+    int temp=l1;
+    while(l1<=r1&&l2<=r2){
+        if(a[l1]<a[l2])tempA[temp++]=a[l1++];
+        else tempA[temp++]=a[l2++];
+    }
+    while(l1<=r1)tempA[temp++]=a[l1++];
+    while(l2<=r2)tempA[temp++]=a[l2++];
+
+}  
+
 void Merge_pass(int a[],int tempA[],int n,int length){
      int i,j;
      for(i=0;i<=n-2*length;i+=2*length){
