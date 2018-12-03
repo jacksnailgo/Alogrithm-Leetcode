@@ -1,0 +1,54 @@
+https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+
+/**
+* Definition for a binary tree node.
+* public class TreeNode {
+*     int val;
+*     TreeNode left;
+*     TreeNode right;
+*     TreeNode(int x) { val = x; }
+* }
+*/
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder==null||inorder==null||preorder.length==0)return null;
+        return buildTree(preorder,0,preorder.length-1,inorder,0,inorder.length-1);
+    }
+    TreeNode buildTree(int[] pre,int preSt,int preEnd, int[] in,int inSt,int inEnd){
+        //根结点的值
+        int rootValue=pre[preSt];
+        TreeNode root=new TreeNode(rootValue);
+        //
+        if(preSt==preEnd)return root;
+        int i=inSt;
+        for(i=0;i<=inEnd;i++){
+            if(rootValue==in[i])break;//找到了中序遍历root的位置
+        }
+        int L=i-inSt;//左子树的长度
+        int leftPreEnd=preSt+L;//左子树的最后一个结点
+        
+        //左子树不为空
+        if(L>0)root.left=buildTree(pre,preSt+1,leftPreEnd,in,inSt,inEnd);
+        //右子树不为空
+        if(preEnd-preSt>L)root.right=buildTree(pre,leftPreEnd+1,preEnd,in,i+1,inEnd);
+        return root;
+        
+    }
+}
