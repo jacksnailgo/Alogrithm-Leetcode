@@ -1,0 +1,74 @@
+对称二叉树      
+
+
+给定一个二叉树，检查它是否是镜像对称的。
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+1
+/ \
+2 2
+/ \ / \
+3 4 4 3
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+1
+/ \
+2 2
+\ \
+3 3
+
+递归法： 两个节点A和B对称等价于: 
+        这两个节点上存储的值相等
+        节点A的左子树节点和节点B的右子树上的节点是对称的
+                节点A的右子树节点和节点A的左子树上的节点是对称的
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+      //对称包含的意思：单个结点只要值相等，那么对称，两个Null对称，两颗树对称
+        if(root==null)return true;
+        return isSymmetric(root.left,root.right);
+    }
+    boolean isSymmetric(TreeNode left,TreeNode right){
+        if(left==null&&right==null)return true;
+        if(left==null||right==null)return false;
+        return (left.val==right.val)&&isSymmetric(left.left,right.right)&&isSymmetric(left.right,right.left);
+      
+    }
+}
+
+迭代法：
+双端队列的使用
+Deque<String> deque = new LinkedList<String>();
+添加元素：  deque.offerFirst()   offerLast()
+删除头尾元素  deque.removeFirst()   removeLast()
+获得头尾元素 deque.getFirst  deque.getLast();
+
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+     if(root==null)return true;
+     if(root.left==null&&root.right==null)return true;
+        if(root.left==null||root.right==null)return false;
+        Deque<TreeNode> deque = new LinkedList<TreeNode>();
+        deque.offerFirst(root.left);
+        deque.offerLast(root.right);
+        while(!deque.isEmpty()){
+            TreeNode left=deque.getFirst();
+            TreeNode right=deque.getLast();
+                deque.removeFirst();
+             deque.removeLast();
+            if(left.val!=right.val)return false;
+            if(left.right==null&&right.left!=null)return false;
+            if(left.right!=null&&right.left==null)return false;
+            if(left.right!=null){
+                deque.offerFirst(left.right);
+                deque.offerLast(right.left);
+            }
+            if(left.left==null&&right.right!=null)return false;
+            if(left.left!=null&&right.right==null)return false;
+            if(left.left!=null){
+                deque.offerFirst(left.left);
+                deque.offerLast(right.right);
+            }
+        }
+        return true;
+    }       
+}
