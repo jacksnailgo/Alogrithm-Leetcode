@@ -1,0 +1,57 @@
+将一个按照升序排列的有序数组，转换为一棵高度平衡二叉搜索树。
+
+本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+
+示例:
+
+给定有序数组: [-10,-3,0,5,9],
+
+一个可能的答案是：[0,-3,9,-10,null,5]，它可以表示下面这个高度平衡二叉搜索树：
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+ 
+
+ 
+
+新的思路：使用快慢指针解决，慢指针遍历之后处于链表中间位置，slow位置就是根结点，slow->next就是二叉树的右子树，
+左边就是左子树。  要将左子树和右子树之间的链表断裂last.next=null  ,fast=slow.next;  左右子树都不包含根结点
+
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+//注意若子树只有两个节点，只需以首节点为根构造右子节点为其后节点的子树
+        if(head==null)return null;
+        if(head.next==null)return new TreeNode(head.val);
+        ListNode fast=head,slow=head,last=slow;
+        while(fast.next!=null&&fast.next.next!=null){
+            last=slow;  //这里执行到最后一步的时候，last只比slow慢一个指针。
+            slow=slow.next;
+            fast=fast.next.next;  
+        }
+        TreeNode root=new TreeNode(slow.val);
+        fast=slow.next;//fast部分的链表转化为右子树
+        //   fast=slow.next;//fast部分的链表转化为右子树
+       // last.next=null;
+        //if(head!=slow){  //这里我写成head!=last  解答错误
+         //   root.left=sortedListToBST(head);
+      //  }
+      //      root.right=sortedListToBST(fast);
+        //return root;
+
+        if(slow!=last){  
+           last.next=null;
+            root.left=sortedListToBST(head);
+        }
+            root.right=sortedListToBST(fast);
+        return root;
+    }
+}
+
+
+同时小心：fast = slow->next;
+last->next = NULL;
+这两句调换一下顺序就不对了。      因为last->next=slow，如果先设置为Null，那么就丢失了数据。
+
